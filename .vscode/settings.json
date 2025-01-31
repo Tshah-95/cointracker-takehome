@@ -1,0 +1,19 @@
+{
+  "typescript.preferences.autoImportFileExcludePatterns": ["@radix-ui/*"],
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "css.lint.unknownAtRules": "ignore",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.autoClosingQuotes": "languageDefined",
+  "typescript.preferences.quoteStyle": "double",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Force Prettier for TSX (React)
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

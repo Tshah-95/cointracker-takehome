@@ -1,101 +1,102 @@
-import Image from "next/image";
+"use client";
+
+import {
+  ChartLine,
+  Coins,
+  Copyright,
+  Crosshair,
+  Hammer,
+  HandCoins,
+  Receipt,
+  Wallet,
+} from "lucide-react";
+import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { TabsTrigger } from "@radix-ui/react-tabs";
+import { use, useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [tab, setTab] = useState("wallet");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  return (
+    <div className="flex justify-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+      <main className="bg-neutral-100 flex flex-col xl:flex-row w-full h-full min-h-screen">
+        <Tabs
+          value={tab}
+          onValueChange={setTab}
+          className="flex flex-col flex-1 w-full gap-20 p-8 sm:p-12"
+        >
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2 items-center">
+              <Coins className="h-8 w-8" />
+              <h1>Coinstalker</h1>
+            </div>
+          </div>
+          <div className="flex-[4_4_0%] flex flex-col">
+            <TabsList className="flex gap-4 justify-start p-0 tracking-tight">
+              <TabOption
+                title="Wallet"
+                icon={<Wallet className="w-4 h-4" />}
+                value="wallet"
+                tab={tab}
+              />
+              <TabOption
+                title="Balance"
+                icon={<ChartLine className="w-4 h-4" />}
+                value="balance"
+                tab={tab}
+              />
+              <TabOption
+                title="Tx History"
+                icon={<Receipt className="w-4 h-4" />}
+                value="history"
+                tab={tab}
+              />
+            </TabsList>
+            <div className="flex flex-col flex-1 mt-8">
+              <TabsContent value="wallet" className="fade-in-left">
+                Change your password here.
+              </TabsContent>
+              <TabsContent value="balance" className="fade-in-left">
+                <span>Make some money.</span>
+              </TabsContent>
+              <TabsContent value="history" className="fade-in-left">
+                <span>Add stuff here.</span>
+              </TabsContent>
+            </div>
+          </div>
+          <div className="flex flex-col justify-end">
+            <p className="text-xs text-gray-500 flex gap-1 items-center">
+              <Copyright className="h-4 w-4" />
+              2025 - Coinstalker - All rights reserved.
+            </p>
+          </div>
+        </Tabs>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
+
+const TabOption = ({
+  title,
+  icon,
+  value,
+  tab,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  value: string;
+  tab: string;
+}) => {
+  return (
+    <TabsTrigger
+      value={value}
+      className="relative flex data-[state=active]:text-slate-800 items-center"
+    >
+      {icon}
+      <span className="ml-1 font-medium pt-0.5">{title}</span>
+      {tab === value && (
+        <span className="-bottom-1 left-[50%] -translate-x-[50%] fade-in-left-lg absolute bg-orange-400 rounded-full h-1 w-[90%]" />
+      )}
+    </TabsTrigger>
+  );
+};

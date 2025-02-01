@@ -2,35 +2,53 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+After cloning the respository, install packages in the root directory with `pnpm install`
+
+The database should already be configured since I decided to check the sqlite db into version control.
+
+To start fresh you could simply delete that file and run `sqlite3 prisma/cointracker.db` from the root directory and then `npx prisma db push`
+
+You should be good to run the development server then with
 
 ```bash
-npm run dev
+pnpm run dev
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+and this should open the project on [localhost:3000](http://localhost:3000/)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Assumptions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+I pretended this app was going to be an MVP for a wallet monitoring/alerts tool since it's largely buildable off of just a given user's transaction history. With that in mind:
 
-## Learn More
+1. I made the nav super lightweight since the app likely wouldn't scale past a few core functions so i went with tabs instead of a top/side nav.
+2. I put a bit of impotus on some nice animations + transitions since the value prop is that this is supposed to feel better/simpler to use than other tools.
+3. I tried to at least get the core ux/server/backfilling all actually functional with scalability compromises rather than build fewer systems out more thoroughly, so this could be actually demo'd
+4. I wanted (but ran out of time) to make the backfill process optimistic and/or visible so that you could incrementally navigate the features as your data filled in without confusion. Empty states + toasts would also help here
+5. I wanted better crud functionality around the addresses (like editable nicknames, shortcuts, etc) but settled for at least delete functionality that cascades to underlying models
 
-To learn more about Next.js, take a look at the following resources:
+## Technical Shortcomings
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Obviously within 4ish hours I couldn't get to a lot of the level of robustness I'd hope to achieve in a real system, so here are some immediate fires i'd put out
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Validation - the address entry process doesn't check for really anything (except preventing empty strings) and will break if you put in an invalid address. We'd want to add some client + server side insurance to catch/fix that as early as possible. Ideally with regex against the form input to just detect if it's a valid bitcoin address
 
-## Deploy on Vercel
+2. Backfilling - Next server functions suck at running long jobs (courtesy of lambda) and the current architecture doesn't give the user the entity back until things are backfilled. We'd ideally offload the backfilling to something like trigger.dev (if we wanted to stay serverless) or to some other persistent backend where we could queue jobs w/ bullmq or SQS -> lambdas and close the loop via a websocket to update the UX or SNS for notifications to the user or w/e makes most product sense (ideally live and async notifications for when loading is done).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Request Rate Limiting - The backfill process also currently sends requests batched by 10,000 transactions ASAP, which will exceed the public rate limits pretty quickly. We'd either need to scale our plan to meet needs or throttle requests with bottleneck.js (additional note that we'd need to account for multiple workers potentially rate limiting in aggregate)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Paginate transaction retrieval - I set up the transactions table with tanstack/react-table (90% boilerplate so there's some extraneous stuff) to handle paginating on the frontend, but if there's 15 million transactions across 10 addresses, we'd still get ruined on our server trying to retreive them all and serialive -> send to frontend (and store on the frontend), so keyset paginating that request would probably be ideal since users are likely to start at 0 and scroll through.
+   This could still get sketchy with sorting, so we might need to be smarter about limiting data pulled into that table
+
+5. Users - There is no concept of a user right now... metamask oauth is probably most logical if we had to pick 1 auth method to start with since we'd get most people's addresses off the cuff (and maybe tx histories? haven't played with it before).
+
+## Product Shortcomings
+
+1. The UX is still pretty meh. I'm happy with the general layout/nav but it's not particularly responsive and center aligning all the addresses looks quite ugly to me and doesn't denote the importance of an address as a first order entity in the system. I'd probably make them cards that can be full screen width on mobile and have them open into a modal / their own screen to see/edit richer data. I'd like them to be groupable as well depending on how many addresses the average user has / some user research
+
+2. If we could simplify the wallet management to just integrating with user's wallets without manual entry i also imagine that improves the onboarding funnel dramatically
+
+3. Analytics/Alerts are probably more important for our target user than a richer transaction history experience (which we can just outsource in v1), so i'd love to build charts for portfolio value over time by address/wallet, comparisons of your wallet vs indicies, or maybe even correlations between big dips/climbs and news events. And then an alerting interface that lets you configure email/text thresholds for when your portfolio / holdings by coin change by some amount
+
+Hope you enjoyed looking over my project :)

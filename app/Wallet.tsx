@@ -17,6 +17,7 @@ import { format } from "date-fns";
 
 export const Wallet = () => {
   const { data, mutate } = useSWR("/api/addresses", fetcher);
+  console.log({ data });
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,7 +77,7 @@ export const Wallet = () => {
               </span>
               <span className="flex items-center gap-1 sm:gap-1.5">
                 <DownloadCloud className="w-4 sm:h-5 h-4 sm:w-5" />
-                {addressData.isLoaded ? "Complete" : "Pending"}
+                {addressData.is_loaded ? "Complete" : "Pending"}
               </span>
               <Button
                 className="flex items-center bg-red-600"

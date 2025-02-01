@@ -1,25 +1,19 @@
 "use client";
 
-import {
-  ChartLine,
-  Coins,
-  Copyright,
-  Crosshair,
-  Hammer,
-  HandCoins,
-  Receipt,
-  Wallet,
-} from "lucide-react";
+import { ChartLine, Coins, Copyright, Receipt, Wallet } from "lucide-react";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
+import { Wallet as WalletContent } from "./Wallet";
+import { Balance } from "./Balance";
+import { TransactionHistory } from "./TransactionHistory";
 
 export default function Home() {
   const [tab, setTab] = useState("wallet");
 
   return (
-    <div className="flex justify-center min-h-screen font-[family-name:var(--font-geist-sans)]">
-      <main className="bg-neutral-100 flex flex-col xl:flex-row w-full h-full min-h-screen">
+    <div className="bg-neutral-100 flex justify-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col w-full h-full min-h-screen max-w-screen-xl">
         <Tabs
           value={tab}
           onValueChange={setTab}
@@ -53,14 +47,24 @@ export default function Home() {
               />
             </TabsList>
             <div className="flex flex-col flex-1 mt-8">
-              <TabsContent value="wallet" className="fade-in-left">
-                Change your password here.
+              {/* data-[state=inactive]:hidden -- without this property the height is distributed across all 3 elements */}
+              <TabsContent
+                value="wallet"
+                className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left"
+              >
+                <WalletContent />
               </TabsContent>
-              <TabsContent value="balance" className="fade-in-left">
-                <span>Make some money.</span>
+              <TabsContent
+                value="balance"
+                className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left"
+              >
+                <Balance />
               </TabsContent>
-              <TabsContent value="history" className="fade-in-left">
-                <span>Add stuff here.</span>
+              <TabsContent
+                value="history"
+                className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left"
+              >
+                <TransactionHistory />
               </TabsContent>
             </div>
           </div>
@@ -90,7 +94,7 @@ const TabOption = ({
   return (
     <TabsTrigger
       value={value}
-      className="relative flex data-[state=active]:text-slate-800 items-center"
+      className="relative flex data-[state=active]:text-slate-800 items-center select-none"
     >
       {icon}
       <span className="ml-1 font-medium pt-0.5">{title}</span>

@@ -1,11 +1,18 @@
 "use client";
 
-import { ChartLine, Coins, Copyright, Receipt, Wallet } from "lucide-react";
+import {
+  AlertTriangle,
+  ChartLine,
+  Coins,
+  Copyright,
+  Receipt,
+  Wallet,
+} from "lucide-react";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { Wallet as WalletContent } from "./Wallet";
-import { Balance } from "./Balance";
+import { Analytics } from "./Analytics";
 import { TransactionHistory } from "./TransactionHistory";
 
 export default function Home() {
@@ -26,27 +33,37 @@ export default function Home() {
             </div>
           </div>
           <div className="flex-[4_4_0%] flex flex-col">
-            <TabsList className="flex gap-4 justify-start p-0 tracking-tight">
-              <TabOption
-                title="Wallet"
-                icon={<Wallet className="w-4 h-4" />}
-                value="wallet"
-                tab={tab}
-              />
-              <TabOption
-                title="Balance"
-                icon={<ChartLine className="w-4 h-4" />}
-                value="balance"
-                tab={tab}
-              />
-              <TabOption
-                title="Tx History"
-                icon={<Receipt className="w-4 h-4" />}
-                value="history"
-                tab={tab}
-              />
+            <TabsList className="flex gap-y-2 sm:gap-x-4 sm:gap-y-0 justify-start p-0 tracking-tight flex-col sm:flex-row">
+              <div className="flex gap-4 justify-start">
+                <TabOption
+                  title="Wallet"
+                  icon={<Wallet className="w-4 h-4" />}
+                  value="wallet"
+                  tab={tab}
+                />
+                <TabOption
+                  title="Tx History"
+                  icon={<Receipt className="w-4 h-4" />}
+                  value="history"
+                  tab={tab}
+                />
+              </div>
+              <div className="flex gap-4 justify-start">
+                <TabOption
+                  title="Analytics"
+                  icon={<ChartLine className="w-4 h-4" />}
+                  value="analytics"
+                  tab={tab}
+                />
+                <TabOption
+                  title="Alerts"
+                  icon={<AlertTriangle className="w-4 h-4" />}
+                  value="alerts"
+                  tab={tab}
+                />
+              </div>
             </TabsList>
-            <div className="flex flex-col flex-1 mt-8">
+            <div className="flex flex-col flex-1 mt-12">
               {/* data-[state=inactive]:hidden -- without this property the height is distributed across all 3 elements */}
               <TabsContent
                 value="wallet"
@@ -55,16 +72,24 @@ export default function Home() {
                 <WalletContent />
               </TabsContent>
               <TabsContent
-                value="balance"
+                value="analytics"
                 className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left"
               >
-                <Balance />
+                <Analytics />
               </TabsContent>
               <TabsContent
                 value="history"
                 className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left"
               >
                 <TransactionHistory />
+              </TabsContent>
+              <TabsContent
+                value="alerts"
+                className="flex flex-col flex-1 data-[state=inactive]:hidden fade-in-left max-w-[30rem]"
+              >
+                Would be nice to configure some options for triggering
+                texts/emails when balances change or uknown addresses transact
+                with you
               </TabsContent>
             </div>
           </div>

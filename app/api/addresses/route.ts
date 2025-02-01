@@ -5,5 +5,10 @@ export async function GET() {
     include: { balance: true },
   });
 
-  return Response.json(addresses);
+  return Response.json(
+    addresses.map((a) => ({
+      ...a,
+      balance: { ...a.balance, balance: a.balance?.balance.toString() },
+    }))
+  );
 }

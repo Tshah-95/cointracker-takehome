@@ -8,39 +8,33 @@ datasource db {
 }
 
 model address {
-  id              Int      @id @default(autoincrement())
-  address         String
-  is_loaded       Boolean   @default(false)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now())
-
-  transactions    transaction[]
-  balance        balance?
+  id           Int           @id @default(autoincrement())
+  address      String
+  is_loaded    Boolean       @default(false)
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @default(now())
+  balance      balance?
+  transactions transaction[]
 }
 
 model balance {
-  id         Int      @id @default(autoincrement())
-  address_id Int @unique
-  address    address @relation(fields: [address_id], references: [id])
-  balance    Float
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  address_id  Int      @unique
+  balance     BigInt
+  balance_usd Float
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+  address     address  @relation(fields: [address_id], references: [id], onDelete: Cascade)
 }
 
 model transaction {
-  id          Int      @id @default(autoincrement())
-  address_id  Int
-  address     address @relation(fields: [address_id], references: [id])
-  tx_hash     String
-  block_number Int
-  timestamp   DateTime
-  from        String
-  to          String
-  value       Float
-  gas         Float
-  gas_price   Float
-  input       String
-  nonce       Int
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  address_id     Int
+  hash           String
+  block_id       Int
+  time           DateTime
+  balance_change BigInt
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now())
+  address        address  @relation(fields: [address_id], references: [id], onDelete: Cascade)
 }

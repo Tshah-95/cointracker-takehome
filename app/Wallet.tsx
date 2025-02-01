@@ -8,6 +8,8 @@ import {
   DownloadCloud,
   Home,
   MapPin,
+  Trash,
+  Trash2,
 } from "lucide-react";
 import { useCallback } from "react";
 import useSWR from "swr";
@@ -15,8 +17,6 @@ import { format } from "date-fns";
 
 export const Wallet = () => {
   const { data, mutate } = useSWR("/api/addresses", fetcher);
-
-  console.log({ data });
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,7 +57,14 @@ export const Wallet = () => {
             >
               <span className="flex items-center gap-1 sm:gap-1.5">
                 <MapPin className="w-4 sm:h-5 h-4 sm:w-5" />
-                {addressData.address}
+                <span
+                  className="w-[8rem] md:w-[12rem] lg:w-[16rem] overflow-hidden text-ellipsis cursor-pointer active:bg-gray-100"
+                  onClick={() =>
+                    navigator.clipboard.writeText(addressData.address)
+                  }
+                >
+                  {addressData.address}
+                </span>
               </span>
               <span className="flex items-center gap-1 sm:gap-1.5">
                 <CircleDollarSign className="w-4 sm:h-5 h-4 sm:w-5" />
@@ -71,6 +78,16 @@ export const Wallet = () => {
                 <DownloadCloud className="w-4 sm:h-5 h-4 sm:w-5" />
                 {addressData.isLoaded ? "Complete" : "Pending"}
               </span>
+              <Button
+                className="flex items-center bg-red-600"
+                onClick={() =>
+                  fetch(`/api/address/${addressData.id}`, {
+                    method: "DELETE",
+                  }).then(() => mutate())
+                }
+              >
+                <Trash2 className="w-5 sm:h-6 h-5 sm:w-6 rounded-md" />
+              </Button>
             </div>
           ))}
         </div>
